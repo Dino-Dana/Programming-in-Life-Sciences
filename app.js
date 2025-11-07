@@ -1,9 +1,21 @@
 const endpoint = "https://query.wikidata.org/sparql";
 const query = `
-  SELECT ?item ?itemLabel WHERE {
-    ?item wdt:P31 wd:Q5 .
-    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-  } LIMIT 5
+# Find the APOE gene and related identifiers
+SELECT ?gene ?geneLabel ?entrez ?ensembl ?genecard ?taxonLabel WHERE {
+  ?gene wdt:P31 wd:Q7187;          # instance of 'gene'
+        wdt:P351 ?entrez;          # Entrez Gene ID
+        wdt:P703 wd:Q15978631.     # human
+        rdfs:label ?geneLabel.
+
+  FILTER(LANG(?geneLabel) = "en")
+  FILTER(CONTAINS(LCASE(?geneLabel), "apoe"))
+
+  OPTIONAL { ?gene wdt:P594 ?ensembl. }   # Ensembl Gene ID
+  OPTIONAL { ?gene wdt:P671 ?genecard. }  # GeneCards ID
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+LIMIT 10
+
 `;
 
 async function runQuery() {
