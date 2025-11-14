@@ -1,59 +1,51 @@
-// app.js
+// sparql.js
 
-// Asynchronous function to fetch gene-trait data from Wikidata
+// Define an asynchronous function to fetch gene-trait data
 async function fetchGeneTraitData() {
+    // Wikidata SPARQL endpoint URL
     const endpointUrl = "https://query.wikidata.org/sparql";
 
-    // SPARQL query: genes associated with trait Q11081 (example trait)
+    // SPARQL query to get genes associated with a specific trait (Q11081)
     const query = `
         SELECT ?gene ?geneLabel ?trait ?traitLabel
         WHERE {
-          ?gene wdt:P31 wd:Q7187 .       # Items that are genes
+          ?gene wdt:P31 wd:Q7187 .       # Select items that are genes (instance of gene)
           ?gene wdt:P2293 ?trait .       # Genes linked to a trait
-          VALUES ?trait { wd:Q11081 }    # Filter only trait Q11081
-          SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+          VALUES ?trait { wd:Q11081 }    # Filter only the trait Q11081
+          SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }  # Get English labels
         }
     `;
 
+    // Construct the full URL for the GET request
+    // encodeURIComponent makes sure the query is URL-safe
     const url = endpointUrl + "?query=" + encodeURIComponent(query) + "&format=json";
 
     try {
+        // Fetch data from the endpoint
+        // 'Accept' header ensures the endpoint returns JSON
         const response = await fetch(url, {
-            headers: { "Accept": "application/sparql-results+json" }
+            headers: {
+                'Accept': 'application/sparql-results+json'
+            }
         });
 
+        // Parse the JSON response
         const data = await response.json();
 
-        // Simplify results: keep only gene and trait labels
-        return data.results.bindings.map(item => ({
-            gene: item.geneLabel.value,
-            trait: item.traitLabel.value
+        // Map the results to a simpler format: {gene, trait}
+        const results = data.results.bindings.map(item => ({
+            gene: item.geneLabel.value,   // Get gene name
+            trait: item.traitLabel.value  // Get trait name
         }));
 
+        // Return the processed results
+        return results;
+
     } catch (error) {
+        // Log errors if the fetch fails
         console.error("Error fetching data:", error);
-        return [];
+        return [];  // Return empty array on error
     }
 }
 
-// Attach event listener to the button
-document.getElementById("loadData").addEventListener("click", async () => {
-    const outputDiv = document.getElementById("output");
-
-    // Show loading message
-    outputDiv.innerHTML = "<p>Loading data...</p>";
-
-    // Fetch data
-    const results = await fetchGeneTraitData();
-
-    // Clear output and display results
-    outputDiv.innerHTML = "";
-    if (results.length === 0) {
-        outputDiv.innerHTML = "<p>No results found.</p>";
-    } else {
-        results.forEach(item => {
-            outputDiv.innerHTML += `<p>${item.gene} → ${item.trait}</p>`;
-        });
-    }
-});
 
