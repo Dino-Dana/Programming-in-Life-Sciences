@@ -1,8 +1,6 @@
 
 // sparql.js
 
-// Define an asynchronous function to fetch gene-trait data
-async function fetchGeneTraitData() {
     // Wikidata SPARQL endpoint URL
     const endpointUrl = "https://query.wikidata.org/sparql";
 
