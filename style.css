@@ -5,6 +5,7 @@ body {
 }
 button { 
   padding: 0.5rem 1rem; 
+  color: #32a852
 }
 #output {
   margin-top: 1rem; 
