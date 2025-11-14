@@ -48,4 +48,14 @@ async function fetchGeneTraitData() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', async () => {
+    const results = await fetchGeneTraitData();
+    console.log('Gene-trait results:', results);
 
+    // Optional: render into an element with id="output" if present
+    const out = document.getElementById('output');
+    if (out) {
+        out.innerText = JSON.stringify(results, null, 2);
+        //out.innerText = "test";
+    }
+});
