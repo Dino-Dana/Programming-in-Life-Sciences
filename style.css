@@ -1,3 +1,11 @@
-body { font-family: Arial, sans-serif; padding: 2rem; }
-button { padding: 0.5rem 1rem; }
-#output { margin-top: 1rem; }
+body {
+  font-family: Arial, sans-serif; 
+  padding: 2rem; 
+  background-color: pink;
+}
+button { 
+  padding: 0.5rem 1rem; 
+}
+#output {
+  margin-top: 1rem; 
+}
