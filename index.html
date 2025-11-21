@@ -1,22 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GenAge Data Viewer</title>
-  <title>lalal</title>
-  
-
-  <!-- Link your CSS file -->
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Gene Statement Counts</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <h1>Alzheimer's disease</h1>
-  <button id="loadData">Load Data</button>
-  <div id="output"></div>
 
-  <!-- Link your JavaScript file -->
-  <script src="app.js"></script>
+<h2>How Often Alzheimer-associated Genes Are Mentioned in Wikidata</h2>
+
+<div id="chart-wrapper">
+  <canvas id="geneChart" width="800" height="400"></canvas>
+</div>
+
+<script>
+// ==================== SPARQL FETCH ====================
+async function fetchGeneTraitData() {
+    const endpointUrl = "https://query.wikidata.org/sparql";
+
+    const query = `
+    SELECT ?gene ?geneLabel (COUNT(?p) AS ?statementCount)
+    WHERE {
+      ?gene wdt:P2293 wd:Q11081 .      # Associated with Alzheimer's disease
+      ?gene ?p ?o .                    # Any statement about the gene
+      FILTER(STRSTARTS(STR(?p), "http://www.wikidata.org/prop/direct/"))
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
+    }
+    GROUP BY ?gene ?geneLabel
+    ORDER BY DESC(?statementCount)
+    `;
+
+    const url = endpointUrl + "?query=" + encodeURIComponent(query) + "&format=json";
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'Accept': 'application/sparql-results+json'
+            }
+        });
+
+        const data = await response.json();
+
+        // We return: gene name + integer count
+        return data.results.bindings.map(item => ({
+            gene: item.geneLabel.value,
+            count: parseInt(item.statementCount.value)
+        }));
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return [];
+    }
+}
+
+// ==================== PLOT WITH CHART.JS ====================
+async function plotGeneData() {
+    const data = await fetchGeneTraitData();
+
+    const labels = data.map(item => item.gene);
+    const counts = data.map(item => item.count);
+
+    const ctx = document.getElementById('geneChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Number of Wikidata Statements',
+                data: counts,
+                backgroundColor: '#ff4fa3',   // 🌸 Pink bars
+                borderColor: '#b1005a',       // 🍓 Darker pink border
+                borderWidth: 2,
+                hoverBackgroundColor: '#ff94c9'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: "Statement Count"
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: "Gene"
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Call it!
+plotGeneData();
+
+</script>
 </body>
 </html>
-
