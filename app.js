@@ -11,7 +11,7 @@ async function fetchGeneTraitData() {
         WHERE {
           ?gene wdt:P31 wd:Q7187 .       # Select items that are genes (instance of gene)
           ?gene wdt:P2293 ?trait .       # Genes linked to a trait
-          VALUES ?trait { wd:Q11081 }    # Filter only the trait Q11081
+          VALUES ?trait { wd:Q11081 }    # Filter only the trait Alzheimer's disease (Q11081)
           SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }  # Get English labels
         }
     `;
