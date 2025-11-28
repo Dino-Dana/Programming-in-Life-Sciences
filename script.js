@@ -59,107 +59,79 @@ function plotChart(canvasId, datasetLabel, data) {
    });
 }
 
-
-// ================================
-// FETCH NETWORK
-// ================================
 async function fetchNetwork(diseaseID, containerID) {
-   const endpoint = "https://query.wikidata.org/sparql";
+    const endpoint = "https://query.wikidata.org/sparql";
 
+    const query = `
+    SELECT DISTINCT ?p1Label ?p2Label
+    WHERE {
+      # Alzheimer- or ALS-associated genes
+      ?gene wdt:P2293 wd:${diseaseID} .
 
-   const query = `
-   SELECT ?g1Label ?g2Label (COUNT(?otherDisease) AS ?weight)
-   WHERE {
-     ?g1 wdt:P2293 wd:${diseaseID} .
-     ?g2 wdt:P2293 wd:${diseaseID} .
-     FILTER(?g1 != ?g2)
+      # Genes encode proteins
+      ?gene wdt:P688 ?p1 .
 
+      # Physical protein–protein interactions
+      ?p1 wdt:P129 ?p2 .
 
-     ?g1 wdt:P2293 ?otherDisease .
-     ?g2 wdt:P2293 ?otherDisease .
+      # Remove self-loops
+      FILTER(?p1 != ?p2)
 
+      # Remove mirrored duplicates (A–B vs B–A)
+      FILTER(STR(?p1) < STR(?p2))
 
-     FILTER(?otherDisease != wd:${diseaseID})
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
+    }
+    ORDER BY ?p1Label ?p2Label
+    `;
 
+    const res = await fetch(endpoint + "?query=" + encodeURIComponent(query) + "&format=json",
+        { headers: { "Accept": "application/sparql-results+json" } }
+    );
+    const raw = await res.json();
 
-     SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
-   }
-   GROUP BY ?g1Label ?g2Label
-   HAVING (COUNT(?otherDisease) > 0)
-   ORDER BY DESC(?weight)
-   `;
+    const nodes = new Map();
+    const edges = new Map();
 
+    raw.results.bindings.forEach(r => {
+        const p1 = r.p1Label.value;
+        const p2 = r.p2Label.value;
 
-   const res = await fetch(endpoint + "?query=" + encodeURIComponent(query) + "&format=json",
-       { headers: { "Accept": "application/sparql-results+json" } }
-   );
-   const raw = await res.json();
+        nodes.set(p1, { id: p1, label: p1 });
+        nodes.set(p2, { id: p2, label: p2 });
 
+        const key = [p1, p2].sort().join("__");
+        edges.set(key, { from: p1, to: p2 });
+    });
 
-   const nodes = new Map();
-   const edges = new Map();
-
-
-   raw.results.bindings.forEach(r => {
-       const g1 = r.g1Label.value;
-       const g2 = r.g2Label.value;
-       const w = parseInt(r.weight.value);
-
-
-       nodes.set(g1, { id: g1, label: g1 });
-       nodes.set(g2, { id: g2, label: g2 });
-
-
-       const key = [g1, g2].sort().join("__");
-       edges.set(key, { from: g1, to: g2, value: w, title: `${w} shared diseases` });
-   });
-
-
-   drawNetwork(containerID, [...nodes.values()], [...edges.values()]);
+    drawNetwork(containerID, [...nodes.values()], [...edges.values()]);
 }
 
 
 function drawNetwork(containerID, nodes, edges) {
-   const container = document.getElementById(containerID);
-   const data = {
-       nodes: new vis.DataSet(nodes),
-       edges: new vis.DataSet(edges)
-   };
+    const container = document.getElementById(containerID);
+    const data = {
+        nodes: new vis.DataSet(nodes),
+        edges: new vis.DataSet(edges)
+    };
 
+    const options = {
+        nodes: {
+            shape: "dot",
+            size: 15,
+            color: "#4f8cff",
+            borderWidth: 2
+        },
+        edges: {
+            color: "#0033aa",
+            smooth: true
+        }
+    };
 
-   const options = {
-       nodes: {
-           shape: "dot",
-           size: 15,
-           color: "#ff4fa3",
-           borderWidth: 2
-       },
-       edges: {
-           color: "#b1005a",
-           scaling: { min: 1, max: 10 },
-           smooth: true
-       }
-   };
-
-
-   new vis.Network(container, data, options);
+    new vis.Network(container, data, options);
 }
 
 
 // ================================
 // RUN EVERYTHING
-// ================================
-(async () => {
-   // Bar charts
-   const alzData = await fetchGeneData("Q11081");     // Alzheimer's
-   const alsData = await fetchGeneData("Q131755");    // ALS
-
-
-   plotChart("alzChart", "Alzheimer’s Gene Statement Counts", alzData);
-   plotChart("alsChart", "Amyotrophic Lateral Sclerosis (ALS) Gene Statement Counts", alsData);
-
-
-   // Networks
-   fetchNetwork("Q11081", "alzNetwork");
-   fetchNetwork("Q131755", "alsNetwork");
-})();
+// =====================
