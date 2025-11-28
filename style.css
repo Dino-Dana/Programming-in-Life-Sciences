@@ -1,12 +1,27 @@
 body {
-  font-family: Arial, sans-serif; 
-  padding: 2rem; 
-  background-color: pink;
+ font-family: Arial, sans-serif;
+ padding: 20px;
 }
-button { 
-  padding: 0.5rem 1rem; 
-  color: #32a852
+
+
+/* Bar charts side-by-side */
+.chart-row {
+ display: flex;
+ justify-content: space-between;
+ gap: 20px;
+ margin-bottom: 40px;
 }
-#output {
-  margin-top: 1rem; 
+
+
+.chart-box {
+ width: 48%;
+}
+
+
+/* Large, clear networks */
+.network {
+ width: 100%;
+ height: 600px;
+ border: 2px solid #ddd;
+ margin-bottom: 40px;
 }
