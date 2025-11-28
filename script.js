@@ -54,10 +54,22 @@ function plotChart(canvasId, datasetLabel, data) {
            },
            scales: {
                y: { beginAtZero: true }
+           },
+          onClick: (evt, elements) => {
+               if (elements.length > 0) {
+                   const chart = elements[0].element.$context.chart;
+                   const index = elements[0].index;
+                   const geneName = chart.data.labels[index];
+
+
+                   const url = `https://www.genecards.org/cgi-bin/carddisp.pl?gene=${geneName}#snp`;
+                   window.open(url, "_blank");
+               }
            }
        }
    });
 }
+
 
 async function fetchNetwork(diseaseID, containerID) {
     const endpoint = "https://query.wikidata.org/sparql";
