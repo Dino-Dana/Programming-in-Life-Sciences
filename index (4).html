@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Alzheimer’s vs Amyotrophic Lateral Sclerosis (ALS) — Gene Comparisons</title>
+
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<!-- vis-network -->
+<script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+<link href="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.css" rel="stylesheet" />
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+
+<body>
+
+
+<h1>Neurodegenerative Diseases: Alzheimer’s and Amyotrophic Lateral Sclerosis (ALS) — Gene Analysis</h1>
+<body>
+
+
+<!-- ===================== TITLE AREA ===================== -->
+<header class="intro">
+  
+
+
+   <p>
+       Neurodegenerative diseases such as Alzheimer’s disease and ALS involve
+       progressive loss of neurons and are influenced by both genetic and
+       environmental factors. This tool aims to provide knowledge on genes
+       relevant to both diseases, and inform potential gene carriers.
+   </p>
+</header>
+
+
+
+
+<h2>Gene Statement Counts</h2>
+<div class="chart-row">
+ <div class="chart-box">
+   <h3>Alzheimer’s Disease</h3>
+   <canvas id="alzChart"></canvas>
+ </div>
+
+
+ <div class="chart-box">
+   <h3>Amyotrophic Lateral Sclerosis (ALS)</h3>
+   <canvas id="alsChart"></canvas>
+ </div>
+</div>
+
+
+<h2>Gene Networks (Shared Disease Connections)</h2>
+
+
+<h3>Alzheimer’s Gene Network</h3>
+<div id="alzNetwork" class="network"></div>
+
+
+<h3>Amyotrophic Lateral Sclerosis (ALS) Gene Network</h3>
+<div id="alsNetwork" class="network"></div>
+
+
+<script src="script.js"></script>
+</body>
+</html>
