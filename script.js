@@ -147,3 +147,22 @@ function drawNetwork(containerID, nodes, edges) {
 // ================================
 // RUN EVERYTHING
 // =====================
+(async () => {
+    // Bar charts
+    const alzData = await fetchGeneData("Q11081");
+
+    const alsData = await fetchGeneData("Q131755");
+    //const alpData = await fetchGeneData("Q11085");
+
+
+    plotChart("alzChart", "Alzheimer’s Gene Statement Counts", alzData);
+    plotChart("alsChart", "ALS Gene Statement Counts", alsData);
+    //plotChart("alzChart", "Alzheimer’s Gene Statement Counts", alpData);
+
+
+    // Networks — NOW PPI NETWORKS
+    fetchNetwork("Q11081", "alzNetwork");   // Alzheimer PPI network
+    fetchNetwork("Q131755", "alsNetwork");  // ALS PPI network
+    //fetchNetwork("Q11085", "alsNetwork");  // ALS PPI network
+
+})();
