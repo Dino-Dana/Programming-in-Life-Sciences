@@ -8,7 +8,7 @@ All of this is displayed via a web page whose structure consists of an HTML file
 - JavaScript
 
 # Web page content
-The web page contains two clickable bar graphs that redirect users to a website about the gene in question, two protein networks and their physical interactions, and explanations in text form.
+The web page contains two clickable bar graphs that redirect users to a website about the gene in question, two protein networks and their physical interactions, and other explanations in text form.
 
 # How to run the file ?
 Once the file has been downloaded, simply open the HTML file to view the web page.
