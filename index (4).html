@@ -1,81 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Alzheimer’s vs Amyotrophic Lateral Sclerosis (ALS) — Gene Comparisons</title>
+    <meta charset="UTF-8">
 
+    <!-- Browser tab title -->
+    <title>Alzheimer’s vs ALS — Gene Comparisons</title>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- ========================= LIBRARIES ========================= -->
 
+    <!-- Chart.js: used to generate the bar charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- vis-network -->
-<script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
-<link href="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.css" rel="stylesheet" />
+    <!-- vis-network: used to draw protein–protein interaction (PPI) graphs -->
+    <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
 
+    <!-- Default CSS for vis-network -->
+    <link href="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.css" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css">
+    <!-- Your own stylesheet for layout & design -->
+    <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
 
+    <!-- ===================== PAGE TITLE ===================== -->
+    <h1>
+        Neurodegenerative Diseases: Alzheimer’s and Amyotrophic Lateral Sclerosis —
+        Genetic Analysis & Protein Network Visualization
+    </h1>
 
-<h1>Neurodegenerative Diseases: Alzheimer’s and Amyotrophic Lateral Sclerosis (ALS) — Gene Analysis</h1>
-<body>
+    <!-- ===================== INTRO TEXT ===================== -->
+    <header class="intro">
+        <p>
+            Neurodegenerative diseases such as Alzheimer’s disease and ALS involve
+            progressive loss of neurons and are influenced by both genetic and
+            environmental factors. This page visualizes gene statements and protein
+            networks to help users better understand genetic associations.
+        </p>
+    </header>
 
+    <!-- ===================== BAR CHARTS SECTION ===================== -->
+    <h2>Gene Statement Counts</h2>
 
-<!-- ===================== TITLE AREA ===================== -->
-<header class="intro">
-  
+    <!-- Row container for two side-by-side charts -->
+    <div class="chart-row">
 
+        <!-- Alzheimer’s disease chart container -->
+        <div class="chart-box">
+            <h3>Alzheimer’s Disease</h3>
+            <!-- Chart.js uses this canvas to draw -->
+            <canvas id="alzChart"></canvas>
+        </div>
 
-   <p>
-       Neurodegenerative diseases such as Alzheimer’s disease (AD) and Amyotrophic lateral sclerosis (ALS) involve progressive neuronal loss driven by both genetic and environmental factors (De Strooper & Karran, 2016; Taylor et al., 2016). Our tool provides accessible information on genes associated with these diseases to support individuals and researchers seeking insight into the disorders.
+        <!-- ALS chart container -->
+        <div class="chart-box">
+            <h3>ALS</h3>
+            <canvas id="alsChart"></canvas>
+        </div>
 
-   </p>
+    </div>
 
-  <p> 
-    
-  Because many neurodegenerative disorders are proteinopathies, aggregation of disease-related proteins accelerates degeneration. In AD, proteins such as amyloid-β precursor protein (APP) and reelin contribute to pathways affecting amyloid accumulation (Selkoe & Hardy, 2016). Similarly, in ALS, aggregation of key proteins such as CACNA1C drive motor neuron degeneration (Van Den Bosch et al., 2006).
+    <!-- ===================== NETWORK GRAPH SECTION ===================== -->
+    <h2>Protein Networks</h2>
 
-  </p>
-</header>
+    <!-- Row for two networks side-by-side -->
+    <div class="network-row">
 
+        <!-- Alzheimer's protein interaction network -->
+        <div class="network-box">
+            <h3>Alzheimer’s Protein Network</h3>
+            <!-- vis-network draws the graph inside this div -->
+            <div id="alzNetwork" class="network"></div>
+        </div>
 
+        <!-- ALS protein interaction network -->
+        <div class="network-box">
+            <h3>ALS Protein Network</h3>
+            <div id="alsNetwork" class="network"></div>
+        </div>
 
+    </div>
 
-<h2>Gene Statement Counts</h2>
-<div class="chart-row">
- <div class="chart-box">
-   <h3>Alzheimer’s Disease</h3>
-   <canvas id="alzChart"></canvas>
- </div>
+    <!-- ===================== MAIN JAVASCRIPT ===================== -->
+    <!-- Runs last so HTML elements exist before scripts try to access them -->
+    <script src="script.js"></script>
 
-
- <div class="chart-box">
-   <h3>Amyotrophic Lateral Sclerosis (ALS)</h3>
-   <canvas id="alsChart"></canvas>
- </div>
-</div>
-
-
-<h2>Gene Networks (Shared Disease Connections)</h2>
-
-  <p>
-    These gene networks illustrate how Alzheimer’s disease and ALS arise from disruptions in interconnected molecular pathways. In AD, proteins such as APP, reelin, and CD33 influence amyloid processing and neuroinflammation (Selkoe & Hardy, 2016). In ALS, proteins like CACNA1C contribute to altered calcium signaling and motor neuron vulnerability (Van Den Bosch et al., 2006). Visualizing these relationships highlights how gene-encoded proteins shape disease mechanisms across both disorders.
-
-  </p>
-
-
-<h3>Alzheimer’s Gene Network</h3>
-<div id="alzNetwork" class="network"></div>
-
-
-<h3>Amyotrophic Lateral Sclerosis (ALS) Gene Network</h3>
-<div id="alsNetwork" class="network"></div>
-
-
-<script src="script.js"></script>
 </body>
 </html>
