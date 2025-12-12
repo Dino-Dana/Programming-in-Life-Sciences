@@ -1,27 +1,50 @@
+/* ===================== GLOBAL PAGE STYLES ===================== */
+
+/* The entire webpage uses a serif font and has spacing around the edges */
 body {
- font-family: Arial, sans-serif;
- padding: 20px;
+    font-family: serif;
+    padding: 20px;
 }
 
 
-/* Bar charts side-by-side */
+/* ===================== BAR CHART LAYOUT ===================== */
+
+/* Make the two bar charts appear side-by-side */
 .chart-row {
- display: flex;
- justify-content: space-between;
- gap: 20px;
- margin-bottom: 40px;
+    display: flex;                  /* Align items horizontally */
+    justify-content: space-between; /* Push charts to opposite sides */
+    gap: 20px;                      /* Space between the two charts */
+    margin-bottom: 40px;            /* Space below the row */
 }
 
-
+/* Each chart box takes roughly half the width */
 .chart-box {
- width: 48%;
+    width: 48%;
 }
 
 
-/* Large, clear networks */
+/* ===================== NETWORK GRAPH LAYOUT ===================== */
+
+/* Flex container to hold the two networks side-by-side */
+.network-row {
+    display: flex;              /* Side-by-side layout */
+    gap: 20px;                  /* Space between the two boxes */
+    justify-content: center;    /* Center horizontally */
+    align-items: flex-start;    /* Align networks at the top */
+    margin-top: 20px;
+}
+
+/* Each network box (one for Alzheimer’s, one for ALS) */
+.network-box {
+    flex: 1;                    /* Each takes equal width */
+    min-width: 300px;           /* Prevents shrinking too small */
+}
+
+/* VIS-NETWORK graph area */
 .network {
- width: 100%;
- height: 600px;
- border: 2px solid #ddd;
- margin-bottom: 40px;
+    width: 100%;
+    height: 400px;              /* Adjust height here */
+    border: 1px solid #ccc;     /* Light border for visibility */
+    border-radius: 10px;        /* Rounded edges */
+    margin-bottom: 40px;        /* Space below networks */
 }
